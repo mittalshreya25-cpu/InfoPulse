@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+*.pyc
+.env
+newsapp_frontend/node_modules/
+newsapp_frontend/dist/
+.DS_Store
+*.db
+newsdb/
