@@ -22,8 +22,8 @@ const ArticleCard = ({ article }) => {
   // Fallbacks if data is missing
   const title = article.title || 'Untitled Article';
   const sourceName = article.source || 'TECH NEWS';
-  const dateStr = article.published_at ? new Date(article.published_at).toLocaleDateString(undefined, {
-    year: 'numeric', month: 'short', day: 'numeric'
+  const dateStr = article.published_at ? new Date(article.published_at).toLocaleString(undefined, {
+    year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
   }) : 'Unknown Date';
   
   const summary = article.summary || '';
