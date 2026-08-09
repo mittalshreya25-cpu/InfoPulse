@@ -52,12 +52,12 @@ def process_feed(feed_url: str, source_id: int, category_id: int, db: Session):
             if published_str:
                 try:
                     dt = dateutil.parser.parse(published_str)
-                    published_at = dt.astimezone(datetime.timezone.utc)
+                    published_at = dt.astimezone(datetime.timezone.utc).replace(tzinfo=None)
                 except Exception as e:
                     logger.warning(f"Error parsing date {published_str} for {original_url}: {e}")
             
             if not published_at:
-                published_at = datetime.datetime.now(datetime.timezone.utc)
+                published_at = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
                     
             # Scrape full text, fallback to RSS summary if scraping fails
             try:
