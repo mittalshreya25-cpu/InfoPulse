@@ -1,5 +1,5 @@
 {
-    "python.defaultInterpreterPath": "C:\\Users\\hp1\\Downloads\\newsapp_backend\\venv\\Scripts\\python.exe",
+    "python.defaultInterpreterPath": "${workspaceFolder}\\venv\\Scripts\\python.exe",
     "python.analysis.extraPaths": [
         "${workspaceFolder}",
         "${workspaceFolder}/venv/Lib/site-packages"
@@ -8,5 +8,7 @@
     "python.pyrefly.typeCheckingMode": "off",
     "python.analysis.diagnosticSeverityOverrides": {
         "reportMissingImports": "none"
-    }
+    },
+    "pyright.venvPath": "${workspaceFolder}",
+    "pyright.venv": "venv"
 }
