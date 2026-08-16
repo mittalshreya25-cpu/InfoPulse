@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+
 const StockTicker = () => {
   const [quotes, setQuotes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,7 +23,7 @@ const StockTicker = () => {
     const fetchQuotes = async () => {
       try {
         // Fetching from our own reliable backend instead of a flaky public proxy
-        const response = await axios.get('http://127.0.0.1:8000/stocks');
+        const response = await axios.get(`${API_BASE_URL}/stocks`);
         const results = response.data || [];
         
         if (results.length > 0) {

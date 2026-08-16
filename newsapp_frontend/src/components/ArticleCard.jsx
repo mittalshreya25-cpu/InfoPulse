@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, ExternalLink, Image as ImageIcon } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+
 const ArticleCard = ({ article }) => {
   const [expanded, setExpanded] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -14,7 +16,7 @@ const ArticleCard = ({ article }) => {
 
   const handleAccordionClick = () => {
     if (!expanded) {
-      fetch(`http://127.0.0.1:8000/articles/${article.id}/track?action_type=READ`, { method: 'POST' }).catch(err => console.error(err));
+      fetch(`${API_BASE_URL}/articles/${article.id}/track?action_type=READ`, { method: 'POST' }).catch(err => console.error(err));
     }
     setExpanded(!expanded);
   };
@@ -52,7 +54,7 @@ const ArticleCard = ({ article }) => {
           target="_blank" 
           rel="noopener noreferrer" 
           className="article-title-link"
-          onClick={() => fetch(`http://127.0.0.1:8000/articles/${article.id}/track?action_type=VIEW`, { method: 'POST' }).catch(err => console.error(err))}
+          onClick={() => fetch(`${API_BASE_URL}/articles/${article.id}/track?action_type=VIEW`, { method: 'POST' }).catch(err => console.error(err))}
         >
           {title}
         </a>

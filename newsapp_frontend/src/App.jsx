@@ -6,6 +6,8 @@ import StockTicker from './components/StockTicker';
 import CurrencyWidget from './components/CurrencyWidget';
 import Starfield from './components/Starfield';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+
 function App() {
   const [articles, setArticles] = useState([]);
   const [trending, setTrending] = useState([]);
@@ -23,7 +25,7 @@ function App() {
 
   const fetchTrending = async () => {
     try {
-      const trendRes = await axios.get('http://127.0.0.1:8000/articles/trending');
+      const trendRes = await axios.get(`${API_BASE_URL}/articles/trending`);
       if (trendRes.data) setTrending(trendRes.data);
     } catch (err) {
       console.error("Error fetching trending:", err);
@@ -34,7 +36,7 @@ function App() {
     // Initial fetch of categories and trending
     const fetchInitialData = async () => {
       try {
-        const catRes = await axios.get('http://127.0.0.1:8000/articles/categories');
+        const catRes = await axios.get(`${API_BASE_URL}/articles/categories`);
         if (catRes.data && catRes.data.length > 0) {
           const fetchedCats = catRes.data.filter(c => c !== 'All');
           setCategories(['All', ...fetchedCats]);
@@ -69,7 +71,7 @@ function App() {
       setError(null);
     }
     try {
-      let url = 'http://127.0.0.1:8000/articles/';
+      let url = `${API_BASE_URL}/articles/`;
       if (selectedCategory !== 'All') {
         url += `?category=${encodeURIComponent(selectedCategory)}`;
       }
@@ -175,7 +177,7 @@ function App() {
                 target="_blank" 
                 rel="noopener noreferrer" 
                 style={{ textDecoration: 'none', color: 'inherit', display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}
-                onClick={() => fetch(`http://127.0.0.1:8000/articles/${item.id}/track?action_type=VIEW`, { method: 'POST' })}
+                onClick={() => fetch(`${API_BASE_URL}/articles/${item.id}/track?action_type=VIEW`, { method: 'POST' })}
               >
                 <span style={{ display: 'inline-block', width: '6px', height: '6px', background: 'var(--primary-accent)', borderRadius: '50%', marginTop: '0.4rem', flexShrink: 0 }}></span>
                 <span style={{ fontSize: '0.9rem', lineHeight: 1.4, color: 'var(--text-main)' }}>{item.title}</span>
