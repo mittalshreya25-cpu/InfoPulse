@@ -6,8 +6,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Initialize client using environment variables (GEMINI_API_KEY)
-client = genai.Client()
+# Initialize client gracefully to avoid crashing if GEMINI_API_KEY is missing
+client = None
+if os.environ.get("GEMINI_API_KEY"):
+    try:
+        client = genai.Client()
+    except Exception as e:
+        print(f"Warning: Failed to initialize Gemini client: {e}")
+else:
+    print("Warning: GEMINI_API_KEY environment variable not set. Summarization will be disabled.")
 
 def generate_summary(text: str) -> dict:
     """
@@ -23,6 +30,10 @@ def generate_summary(text: str) -> dict:
     {text}
     """
     
+    if not client:
+        print("Gemini client not initialized. Missing API key?")
+        return None
+        
     try:
         # Using the fast and cost-effective flash-lite model with JSON mode enabled
         response = client.models.generate_content(
