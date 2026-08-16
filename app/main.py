@@ -14,7 +14,26 @@ from app.services.ingest import process_feed, ingest_latest_news
 async def lifespan(app: FastAPI):
     # Execute on startup
     models.Base.metadata.create_all(bind=engine)
+    
+    # Seed database and start scraper
+    import threading
+    from app.crud import seed_initial_articles_if_empty
+    
+    db = SessionLocal()
+    try:
+        seed_initial_articles_if_empty(db)
+    finally:
+        db.close()
+        
+    threading.Thread(target=ingest_latest_news, daemon=True).start()
+    
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(ingest_latest_news, 'interval', minutes=10)
+    scheduler.start()
+    
     yield
+    
+    scheduler.shutdown()
 
 app = FastAPI(lifespan=lifespan)
 
@@ -43,22 +62,3 @@ def health_check(db: Session = Depends(get_db)):
 
 
 
-@app.on_event("startup")
-def start_scheduler():
-    import threading
-    from app.crud import seed_initial_articles_if_empty
-    
-    # Run immediate initial database seeding
-    db = SessionLocal()
-    try:
-        seed_initial_articles_if_empty(db)
-    finally:
-        db.close()
-    
-    # Trigger immediately on startup
-    threading.Thread(target=ingest_latest_news, daemon=True).start()
-    
-    # Run background scheduler every 10 minutes
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(ingest_latest_news, 'interval', minutes=10)
-    scheduler.start()
